@@ -23,6 +23,32 @@ class Goal(StrEnum):
     gain = "gain"
 
 
+class Muscle(StrEnum):
+    chest = "chest"
+    back = "back"
+    shoulders = "shoulders"
+    arms = "arms"
+    legs = "legs"
+    glutes = "glutes"
+    core = "core"
+    cardio = "cardio"
+
+
+class Equipment(StrEnum):
+    barbell = "barbell"
+    dumbbell = "dumbbell"
+    kettlebell = "kettlebell"
+    machine = "machine"
+    cable = "cable"
+    bodyweight = "bodyweight"
+
+
+class Level(StrEnum):
+    beginner = "beginner"
+    intermediate = "intermediate"
+    advanced = "advanced"
+
+
 class ProfileBase(SQLModel):
     name: str = Field(min_length=1, max_length=60)
     age: int = Field(ge=10, le=100)
@@ -57,3 +83,23 @@ class WeightEntryBase(SQLModel):
 
 class WeightEntry(WeightEntryBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+
+
+class Exercise(SQLModel, table=True):
+    """One exercise from the library (see app/library.py)."""
+
+    id: int | None = Field(default=None, primary_key=True)
+    slug: str = Field(index=True, unique=True)
+    name: str
+    name_nl: str
+    muscle: Muscle = Field(index=True)
+    secondary: str = ""  # comma separated muscles
+    equipment: Equipment
+    level: Level
+    unit: str = "reps"  # "reps" or "seconds"
+    demo: str
+    steps_en: str  # one step per line
+    steps_nl: str
+    tip_en: str
+    tip_nl: str
+    favorite: bool = False

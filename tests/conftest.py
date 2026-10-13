@@ -7,6 +7,7 @@ from sqlmodel import Session, SQLModel, create_engine
 
 from app.database import get_session
 from app.dependencies import get_today
+from app.library import sync_library
 from app.main import app
 
 TODAY = date(2026, 10, 14)  # a Wednesday
@@ -17,6 +18,7 @@ def session():
     engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
     SQLModel.metadata.create_all(engine)
     with Session(engine) as db:
+        sync_library(db)
         yield db
 
 

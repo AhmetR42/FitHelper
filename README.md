@@ -1,6 +1,6 @@
 # FitHelper
 
-Track your workouts, body weight and progress. A **FastAPI** backend with a SQLite database, and a web dashboard in plain JavaScript that talks to the same REST API. The dashboard switches between English and Dutch.
+Track your workouts, body weight and progress, and learn new exercises from an animated library. A **FastAPI** backend with a SQLite database, and a web dashboard in plain JavaScript that talks to the same REST API. The dashboard switches between English and Dutch, and between a light and a dark theme.
 
 This is version 2 of [FitHelper](https://github.com/AhmetR42/Fithelper-App), which started as a Python console app. Data from the console app can be imported (see below).
 
@@ -8,8 +8,13 @@ This is version 2 of [FitHelper](https://github.com/AhmetR42/Fithelper-App), whi
 
 ## Features
 
+- **Exercise library**: 50 exercises in the database, each with an animated demonstration, three steps in English and Dutch, a tip, the muscles it works and a link to a video. Search, filter by muscle group, equipment and level, and keep favourites.
+- **Animated figures**: every demonstration is drawn in SVG by a small animation engine (`static/js/demos.js`). Poses are keyframes; elbows and knees are placed with two-bone inverse kinematics, so feet stay on the floor and hands stay on the bar.
 - **Workout log**: exercise, sets, reps, weight and notes. Volume and estimated one-rep max (Epley) are calculated for every set. Edit, delete and undo.
-- **Weekly overview**: workouts and volume this week, training streak in weeks, and a bar chart of the last eight weeks.
+- **Weekly overview**: a weekly goal ring, workouts and volume this week, training streak in weeks, which muscle groups you trained, an exercise of the day and a bar chart of the last eight weeks.
+- **Rest timer** with presets, +15 seconds, a sound and vibration when the rest is over, and an option to start it after every set.
+- **Celebrations**: confetti for a new personal record or a reached weekly goal.
+- **Settings**: light, dark or automatic theme, five accent colours, weekly goal, default rest time, sound and calm mode with fewer animations.
 - **Personal records** per exercise, and a progress chart for any exercise.
 - **Body weight**: one weigh-in per day, a line chart, and the change over the last 30 days.
 - **Profile and calories**: BMI with its category, and daily calories with the Mifflin-St Jeor formula, adjusted for activity level and goal (lose fat, maintain, build muscle).
@@ -17,7 +22,11 @@ This is version 2 of [FitHelper](https://github.com/AhmetR42/Fithelper-App), whi
 - **Validation** on the server. When a form is rejected, the dashboard highlights the fields the API complained about.
 - **Example data** with one click, so you can try the dashboard right away.
 
-| Workouts | Profile (Dutch) |
+| Exercise library | Exercise details |
+| --- | --- |
+| ![Exercise library](docs/screenshots/exercises.png) | ![Exercise details](docs/screenshots/exercise-detail.png) |
+
+| Workouts and rest timer | Profile and settings (Dutch, dark theme) |
 | --- | --- |
 | ![Workouts](docs/screenshots/workouts.png) | ![Profile in Dutch](docs/screenshots/profile-nl.png) |
 
@@ -61,6 +70,9 @@ The interactive API documentation is at http://localhost:8000/docs.
 | `GET` | `/api/workouts/exercises` | All exercise names used so far |
 | `GET` / `POST` | `/api/weights` | List weigh-ins or add one (one per day) |
 | `DELETE` | `/api/weights/{id}` | Delete a weigh-in |
+| `GET` | `/api/exercises` | The exercise library. Filters: `muscle`, `equipment`, `level`, `q`, `favorites` |
+| `GET` | `/api/exercises/{slug}` | One exercise with steps, tip and how often you logged it |
+| `PUT` | `/api/exercises/{slug}/favorite` | Mark or unmark a favourite |
 | `GET` | `/api/stats/summary` | Everything the overview page shows |
 | `GET` | `/api/stats/exercise/{name}` | Best estimated 1RM per day for one exercise |
 | `POST` | `/api/demo` | Replace all data with example data |
@@ -84,7 +96,7 @@ python -m app.import_v1 path/to/Fithelper-App/data
 ## Tests
 
 ```bash
-pytest          # 19 tests: calculations and every API endpoint
+pytest          # calculations, the exercise library and every API endpoint
 ruff check .    # lint
 ```
 
@@ -98,16 +110,18 @@ app/
   fitness.py       BMI, calories, volume, 1RM, streaks (pure functions)
   models.py        database tables (SQLModel)
   schemas.py       request and response models
-  routers/         profile, workouts, weights, stats
+  library.py       the exercise library, copied into the database on startup
+  routers/         profile, workouts, weights, stats, exercises
   seed.py          example data
   import_v1.py     import from the console app
 static/            dashboard: HTML, CSS and JavaScript modules
+  js/demos.js      the animated exercise figures
 tests/             pytest
 ```
 
 ## Built with
 
-Python 3.13, FastAPI, SQLModel (SQLAlchemy + Pydantic), SQLite, pytest, Ruff, Docker, and vanilla JavaScript with hand-drawn SVG charts.
+Python 3.13, FastAPI, SQLModel (SQLAlchemy + Pydantic), SQLite, pytest, Ruff, Docker, and vanilla JavaScript with hand-drawn SVG charts and animations.
 
 ## License
 

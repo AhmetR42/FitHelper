@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FitHelper</title>
-    <meta name="description" content="Track workouts, body weight and progress.">
-    <meta name="theme-color" content="#f4f1ea">
+    <meta name="description" content="Track workouts, body weight and progress, with an animated exercise library.">
+    <meta name="theme-color" content="#f5f6fb">
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap">
     <link rel="stylesheet" href="/static/css/app.css">
     <script type="module" src="/static/js/app.js"></script>
 </head>
@@ -19,16 +19,32 @@
     <header class="topbar">
         <a class="brand" href="#overview">
             <span class="brand-mark" aria-hidden="true">
-                <svg viewBox="0 0 32 32" width="34" height="34"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M5 17h5l2.5-6 4 12 3-9 2 3H27" fill="none" stroke="#f4f1ea" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg viewBox="0 0 32 32" width="34" height="34"><rect width="32" height="32" rx="10" fill="currentColor"/><path d="M6 17h5l2.5-6 4 12 3-9 2 3H26" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
             <span class="brand-name">Fit<b>Helper</b></span>
         </a>
 
         <nav class="tabs" data-i18n-label="navigation" aria-label="Navigation">
-            <a href="#overview" data-tab="overview" data-i18n="nav.overview">Overview</a>
-            <a href="#workouts" data-tab="workouts" data-i18n="nav.workouts">Workouts</a>
-            <a href="#weight" data-tab="weight" data-i18n="nav.weight">Weight</a>
-            <a href="#profile" data-tab="profile" data-i18n="nav.profile">Profile</a>
+            <a href="#overview" data-tab="overview">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5H9v5H5a1 1 0 0 1-1-1z"/></svg>
+                <span data-i18n="nav.overview">Overview</span>
+            </a>
+            <a href="#exercises" data-tab="exercises">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12"/></svg>
+                <span data-i18n="nav.exercises">Exercises</span>
+            </a>
+            <a href="#workouts" data-tab="workouts">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v15H5zM9 3v4M15 3v4M8.5 13l2.5 2.5 4.5-5"/></svg>
+                <span data-i18n="nav.workouts">Workouts</span>
+            </a>
+            <a href="#weight" data-tab="weight">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8 9a6 6 0 0 1 8 0l-3 3"/></svg>
+                <span data-i18n="nav.weight">Weight</span>
+            </a>
+            <a href="#profile" data-tab="profile">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                <span data-i18n="nav.profile">Profile</span>
+            </a>
             <span class="tab-indicator" aria-hidden="true"></span>
         </nav>
 
@@ -43,25 +59,36 @@
         <!-- Overview -->
         <section class="view" id="view-overview" data-view="overview">
             <div class="hero">
-                <div>
+                <div class="hero-text">
                     <p class="kicker" id="today-label"></p>
-                    <h1><span id="greeting" data-i18n="hello">Hello</span><span class="accent" id="hero-name"></span></h1>
+                    <h1><span id="greeting" data-i18n="hello">Hello</span><span class="accent-text" id="hero-name"></span> <span class="wave" aria-hidden="true">👋</span></h1>
                 </div>
-                <svg class="pulse" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true">
-                    <path d="M0 50 H180 L200 50 L215 20 L235 72 L255 8 L275 60 L290 50 H420 L435 50 L445 34 L458 58 L470 50 H600"/>
-                </svg>
+                <div class="goal-card" id="goal-card"></div>
             </div>
 
             <div class="empty-state" id="welcome" hidden>
-                <h2 data-i18n="welcome.title">Welcome to FitHelper</h2>
-                <p data-i18n="welcome.text">Set up your profile and log your first workout. Or load example data to see what the dashboard looks like.</p>
-                <div class="actions">
-                    <a class="button button-primary" href="#profile" data-i18n="welcome.profile">Create profile</a>
-                    <button type="button" class="button" id="load-demo" data-i18n="welcome.demo">Load example data</button>
+                <div class="welcome-figure" id="welcome-figure" aria-hidden="true"></div>
+                <div>
+                    <h2 data-i18n="welcome.title">Welcome to FitHelper</h2>
+                    <p data-i18n="welcome.text">Set up your profile and log your first workout. Or load example data to see what the dashboard looks like.</p>
+                    <div class="actions">
+                        <a class="button button-primary" href="#profile" data-i18n="welcome.profile">Create profile</a>
+                        <button type="button" class="button" id="load-demo" data-i18n="welcome.demo">Load example data</button>
+                    </div>
                 </div>
             </div>
 
             <div class="tiles" id="tiles"></div>
+
+            <div class="grid-3">
+                <article class="panel daily" id="daily"></article>
+                <article class="panel span-2">
+                    <header class="panel-head">
+                        <h2 data-i18n="balance.title">Muscles this week</h2>
+                    </header>
+                    <div id="balance"></div>
+                </article>
+            </div>
 
             <div class="grid-2">
                 <article class="panel">
@@ -101,6 +128,40 @@
             </div>
         </section>
 
+        <!-- Exercise library -->
+        <section class="view" id="view-exercises" data-view="exercises" hidden>
+            <div class="section-title">
+                <h1 data-i18n="library.title">Exercise library</h1>
+                <p data-i18n="library.lead">Every exercise has an animated demonstration, clear steps and a tip.</p>
+            </div>
+
+            <div class="library-tools panel">
+                <label class="search">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+                    <span class="visually-hidden" data-i18n="library.search">Search exercises</span>
+                    <input type="search" id="library-search" autocomplete="off" data-i18n-placeholder="library.search">
+                </label>
+                <div class="chips" id="muscle-chips" role="group" data-i18n-label="library.muscle" aria-label="Muscle group"></div>
+                <div class="filter-row">
+                    <label class="select-inline">
+                        <span class="visually-hidden" data-i18n="equipment.barbell">Equipment</span>
+                        <select id="library-equipment"></select>
+                    </label>
+                    <label class="select-inline">
+                        <span class="visually-hidden" data-i18n="level.beginner">Level</span>
+                        <select id="library-level"></select>
+                    </label>
+                    <button type="button" class="chip chip-heart" id="library-favorites" aria-pressed="false">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+                        <span data-i18n="library.favorites">Favourites</span>
+                    </button>
+                    <span class="result-count" id="library-count" aria-live="polite"></span>
+                </div>
+            </div>
+
+            <div class="exercise-grid" id="exercise-grid"></div>
+        </section>
+
         <!-- Workouts -->
         <section class="view" id="view-workouts" data-view="workouts" hidden>
             <div class="section-title">
@@ -121,19 +182,32 @@
                             <input name="exercise" list="exercise-list" required maxlength="60" autocomplete="off" data-i18n-placeholder="form.exercisePlaceholder">
                         </label>
                     </div>
+                    <div class="picked" id="picked-exercise" hidden></div>
                     <div class="row row-3">
-                        <label class="field">
-                            <span data-i18n="form.sets">Sets</span>
-                            <input type="number" name="sets" min="1" max="50" required inputmode="numeric">
-                        </label>
-                        <label class="field">
-                            <span data-i18n="form.reps">Reps</span>
-                            <input type="number" name="reps" min="1" max="100" required inputmode="numeric">
-                        </label>
-                        <label class="field">
-                            <span data-i18n="form.weight">Weight (kg)</span>
-                            <input type="number" name="weight_kg" min="0" max="500" step="0.25" required inputmode="decimal">
-                        </label>
+                        <div class="field">
+                            <span id="label-sets" data-i18n="form.sets">Sets</span>
+                            <div class="stepper">
+                                <button type="button" data-step="sets" data-delta="-1" data-i18n-label="decrease" aria-label="Decrease">−</button>
+                                <input type="number" name="sets" min="1" max="50" required inputmode="numeric" aria-labelledby="label-sets">
+                                <button type="button" data-step="sets" data-delta="1" data-i18n-label="increase" aria-label="Increase">+</button>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <span id="label-reps" data-i18n="form.reps">Reps</span>
+                            <div class="stepper">
+                                <button type="button" data-step="reps" data-delta="-1" data-i18n-label="decrease" aria-label="Decrease">−</button>
+                                <input type="number" name="reps" min="1" max="100" required inputmode="numeric" aria-labelledby="label-reps">
+                                <button type="button" data-step="reps" data-delta="1" data-i18n-label="increase" aria-label="Increase">+</button>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <span id="label-weight" data-i18n="form.weight">Weight (kg)</span>
+                            <div class="stepper">
+                                <button type="button" data-step="weight_kg" data-delta="-2.5" data-i18n-label="decrease" aria-label="Decrease">−</button>
+                                <input type="number" name="weight_kg" min="0" max="500" step="0.25" required inputmode="decimal" aria-labelledby="label-weight">
+                                <button type="button" data-step="weight_kg" data-delta="2.5" data-i18n-label="increase" aria-label="Increase">+</button>
+                            </div>
+                        </div>
                     </div>
                     <label class="field">
                         <span data-i18n="form.notes">Notes</span>
@@ -194,7 +268,7 @@
             </div>
         </section>
 
-        <!-- Profile -->
+        <!-- Profile and settings -->
         <section class="view" id="view-profile" data-view="profile" hidden>
             <div class="section-title">
                 <h1 data-i18n="profile.title">Profile</h1>
@@ -241,10 +315,94 @@
                         <button type="submit" class="button button-primary" data-i18n="profile.save">Save profile</button>
                     </div>
                 </form>
-                <article class="panel energy" id="energy"></article>
+                <div class="stack">
+                    <article class="panel energy" id="energy"></article>
+                    <form class="panel form settings" id="settings-form">
+                        <div>
+                            <h2 data-i18n="settings.title">Settings</h2>
+                            <p class="muted" data-i18n="settings.lead">Make FitHelper yours. Saved in this browser.</p>
+                        </div>
+                        <fieldset class="segmented">
+                            <legend data-i18n="settings.theme">Theme</legend>
+                            <label><input type="radio" name="theme" value="light"><span data-i18n="settings.light">Light</span></label>
+                            <label><input type="radio" name="theme" value="dark"><span data-i18n="settings.dark">Dark</span></label>
+                            <label><input type="radio" name="theme" value="auto"><span data-i18n="settings.auto">Auto</span></label>
+                        </fieldset>
+                        <fieldset class="swatches">
+                            <legend data-i18n="settings.accent">Colour</legend>
+                            <label class="swatch" data-accent="violet"><input type="radio" name="accent" value="violet"><span class="visually-hidden" data-i18n="accents.violet">Violet</span></label>
+                            <label class="swatch" data-accent="mint"><input type="radio" name="accent" value="mint"><span class="visually-hidden" data-i18n="accents.mint">Mint</span></label>
+                            <label class="swatch" data-accent="coral"><input type="radio" name="accent" value="coral"><span class="visually-hidden" data-i18n="accents.coral">Coral</span></label>
+                            <label class="swatch" data-accent="sky"><input type="radio" name="accent" value="sky"><span class="visually-hidden" data-i18n="accents.sky">Sky</span></label>
+                            <label class="swatch" data-accent="berry"><input type="radio" name="accent" value="berry"><span class="visually-hidden" data-i18n="accents.berry">Berry</span></label>
+                        </fieldset>
+                        <div class="row">
+                            <div class="field">
+                                <span id="label-goal" data-i18n="settings.weeklyGoal">Workouts per week</span>
+                                <div class="stepper">
+                                    <button type="button" data-step="weeklyGoal" data-delta="-1" data-i18n-label="decrease" aria-label="Decrease">−</button>
+                                    <input type="number" name="weeklyGoal" min="1" max="7" aria-labelledby="label-goal">
+                                    <button type="button" data-step="weeklyGoal" data-delta="1" data-i18n-label="increase" aria-label="Increase">+</button>
+                                </div>
+                            </div>
+                            <label class="field">
+                                <span data-i18n="settings.rest">Default rest time</span>
+                                <select name="restSeconds">
+                                    <option value="30">0:30</option>
+                                    <option value="60">1:00</option>
+                                    <option value="90">1:30</option>
+                                    <option value="120">2:00</option>
+                                    <option value="180">3:00</option>
+                                </select>
+                            </label>
+                        </div>
+                        <label class="switch"><input type="checkbox" name="sound"><span class="switch-track" aria-hidden="true"></span><span data-i18n="settings.sound">Play a sound when the rest is over</span></label>
+                        <label class="switch"><input type="checkbox" name="autoTimer"><span class="switch-track" aria-hidden="true"></span><span data-i18n="settings.autoTimer">Start the rest timer after saving a set</span></label>
+                        <fieldset class="segmented">
+                            <legend data-i18n="settings.motion">Animations</legend>
+                            <label><input type="radio" name="motion" value="full"><span data-i18n="settings.motionFull">Full</span></label>
+                            <label><input type="radio" name="motion" value="reduced"><span data-i18n="settings.motionReduced">Calm</span></label>
+                        </fieldset>
+                    </form>
+                </div>
             </div>
         </section>
     </main>
+
+    <!-- Exercise details -->
+    <dialog class="sheet" id="exercise-dialog" aria-labelledby="dialog-title">
+        <div class="sheet-body" id="exercise-detail"></div>
+    </dialog>
+
+    <!-- Rest timer -->
+    <button type="button" class="timer-fab" id="timer-fab" data-i18n-label="timer.open" aria-label="Open the rest timer" aria-expanded="false" aria-controls="timer-panel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>
+        <span class="timer-fab-time" id="timer-fab-time" hidden></span>
+    </button>
+    <section class="timer-panel" id="timer-panel" hidden aria-labelledby="timer-title">
+        <h2 id="timer-title" data-i18n="timer.title">Rest timer</h2>
+        <div class="timer-ring">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="ring-bg" cx="60" cy="60" r="52"/>
+                <circle class="ring-fg" id="timer-ring" cx="60" cy="60" r="52"/>
+            </svg>
+            <span class="timer-time" id="timer-time" role="timer">1:30</span>
+        </div>
+        <div class="timer-presets" id="timer-presets">
+            <button type="button" data-seconds="30">0:30</button>
+            <button type="button" data-seconds="60">1:00</button>
+            <button type="button" data-seconds="90">1:30</button>
+            <button type="button" data-seconds="120">2:00</button>
+            <button type="button" data-seconds="180">3:00</button>
+        </div>
+        <div class="actions">
+            <button type="button" class="button button-primary" id="timer-toggle" data-i18n="timer.start">Start</button>
+            <button type="button" class="button" id="timer-add" data-i18n="timer.add">+15 s</button>
+            <button type="button" class="button button-ghost" id="timer-reset" data-i18n="timer.reset">Reset</button>
+        </div>
+    </section>
+
+    <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
 
     <div class="toast" id="toast" role="status" hidden>
         <span id="toast-text"></span>

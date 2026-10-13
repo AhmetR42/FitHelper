@@ -4,10 +4,12 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from sqlmodel import Session
 
-from .database import create_tables
+from .database import create_tables, engine
 from .dependencies import SessionDep
-from .routers import profile, stats, weights, workouts
+from .library import sync_library
+from .routers import exercises, profile, stats, weights, workouts
 
 STATIC = Path(__file__).resolve().parent.parent / "static"
 
@@ -15,17 +17,19 @@ STATIC = Path(__file__).resolve().parent.parent / "static"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_tables()
+    with Session(engine) as session:
+        sync_library(session)
     yield
 
 
 app = FastAPI(
     title="FitHelper API",
     description="Track workouts, body weight and progress. The web dashboard uses this same API.",
-    version="2.0.0",
+    version="2.1.0",
     lifespan=lifespan,
 )
 
-for router in (profile.router, workouts.router, weights.router, stats.router):
+for router in (profile.router, workouts.router, weights.router, stats.router, exercises.router):
     app.include_router(router)
 
 

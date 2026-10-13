@@ -14,9 +14,24 @@ from .models import Activity, Goal, Profile, Sex, WeightEntry, Workout
 
 # (exercise, starting weight, weekly increase, reps)
 PLAN = {
-    0: [("Bench press", 70, 2.5, 6), ("Barbell row", 60, 2.5, 8), ("Overhead press", 40, 1.25, 8)],
-    2: [("Squat", 90, 2.5, 5), ("Romanian deadlift", 80, 2.5, 8), ("Leg press", 140, 5, 10)],
-    4: [("Deadlift", 120, 5, 5), ("Lat pulldown", 55, 2.5, 10), ("Bench press", 65, 2.5, 8)],
+    0: [
+        ("Bench press", 70, 2.5, 6),
+        ("Barbell row", 60, 2.5, 8),
+        ("Overhead press", 40, 1.25, 8),
+        ("Lateral raise", 8, 0.5, 12),
+    ],
+    2: [
+        ("Back squat", 90, 2.5, 5),
+        ("Romanian deadlift", 80, 2.5, 8),
+        ("Leg press", 140, 5, 10),
+        ("Hip thrust", 80, 5, 10),
+    ],
+    4: [
+        ("Deadlift", 120, 5, 5),
+        ("Lat pulldown", 55, 2.5, 10),
+        ("Bench press", 65, 2.5, 8),
+        ("Barbell curl", 30, 1.25, 10),
+    ],
 }
 
 

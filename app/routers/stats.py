@@ -1,11 +1,11 @@
 from datetime import date, timedelta
 
 from fastapi import APIRouter
-from sqlmodel import col, select
+from sqlmodel import Session, col, select
 
 from .. import fitness
 from ..dependencies import SessionDep, TodayDep
-from ..models import Profile, WeightEntry, Workout
+from ..models import Exercise, Profile, WeightEntry, Workout
 from ..schemas import Body, Summary
 
 router = APIRouter(prefix="/api/stats", tags=["stats"])
@@ -60,7 +60,18 @@ def summary(session: SessionDep, today: TodayDep):
         weekly_volume=fitness.weekly_volume(workouts, today),
         personal_records=fitness.personal_records(workouts)[:6],
         weight_history=[{"date": e.date.isoformat(), "weight_kg": e.weight_kg} for e in weights[-60:]],
+        muscles_this_week=muscle_sets(session, this_week),
     )
+
+
+def muscle_sets(session: Session, workouts: list[Workout]) -> dict[str, int]:
+    """Sets per main muscle group. Exercises that are not in the library count as "other"."""
+    muscles = {exercise.name.lower(): exercise.muscle.value for exercise in session.exec(select(Exercise))}
+    sets: dict[str, int] = {}
+    for workout in workouts:
+        muscle = muscles.get(workout.exercise.lower(), "other")
+        sets[muscle] = sets.get(muscle, 0) + workout.sets
+    return dict(sorted(sets.items(), key=lambda item: -item[1]))
 
 
 @router.get("/exercise/{name}")

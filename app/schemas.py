@@ -1,7 +1,7 @@
 from pydantic import field_validator
 from sqlmodel import SQLModel
 
-from .models import ProfileBase, WeightEntryBase, WorkoutBase
+from .models import Equipment, Level, Muscle, ProfileBase, WeightEntryBase, WorkoutBase
 
 
 def clean_exercise(value: str) -> str:
@@ -63,3 +63,36 @@ class Summary(SQLModel):
     weekly_volume: list[dict]
     personal_records: list[dict]
     weight_history: list[dict]
+    muscles_this_week: dict[str, int]
+
+
+class Steps(SQLModel):
+    en: list[str]
+    nl: list[str]
+
+
+class Tip(SQLModel):
+    en: str
+    nl: str
+
+
+class ExerciseOut(SQLModel):
+    slug: str
+    name: str
+    name_nl: str
+    muscle: Muscle
+    secondary: list[Muscle]
+    equipment: Equipment
+    level: Level
+    unit: str
+    demo: str
+    steps: Steps
+    tip: Tip
+    favorite: bool
+    video_url: str
+    times_logged: int
+    best_e1rm: float | None
+
+
+class FavoriteIn(SQLModel):
+    favorite: bool
