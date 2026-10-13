@@ -33,6 +33,8 @@ docker compose up --build
 
 Open http://localhost:8000. The database is kept in a Docker volume.
 
+Is port 8000 already in use? Pick another one, for example `PORT=8080 docker compose up --build` (PowerShell: `$env:PORT=8080; docker compose up --build`), and open http://localhost:8080.
+
 ### With Python
 
 Requires Python 3.12 or newer.
