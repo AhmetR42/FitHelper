@@ -1,0 +1,10 @@
+services:
+  fithelper:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - fithelper-data:/app/data
+
+volumes:
+  fithelper-data:

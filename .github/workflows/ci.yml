@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Test
+        run: pytest -q
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t fithelper .
+      - name: Smoke test
+        run: |
+          docker run -d --name fithelper -p 8000:8000 fithelper
+          for i in $(seq 1 20); do curl -fs http://localhost:8000/api/health && break; sleep 1; done
+          curl -fs http://localhost:8000/ | grep -q FitHelper
+          curl -fs -X POST http://localhost:8000/api/demo
+          curl -fs http://localhost:8000/api/stats/summary | grep -q personal_records

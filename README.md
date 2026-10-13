@@ -1,0 +1,112 @@
+# FitHelper
+
+Track your workouts, body weight and progress. A **FastAPI** backend with a SQLite database, and a web dashboard in plain JavaScript that talks to the same REST API. The dashboard switches between English and Dutch.
+
+This is version 2 of [FitHelper](https://github.com/AhmetR42/Fithelper-App), which started as a Python console app. Data from the console app can be imported (see below).
+
+![Overview](docs/screenshots/overview.png)
+
+## Features
+
+- **Workout log**: exercise, sets, reps, weight and notes. Volume and estimated one-rep max (Epley) are calculated for every set. Edit, delete and undo.
+- **Weekly overview**: workouts and volume this week, training streak in weeks, and a bar chart of the last eight weeks.
+- **Personal records** per exercise, and a progress chart for any exercise.
+- **Body weight**: one weigh-in per day, a line chart, and the change over the last 30 days.
+- **Profile and calories**: BMI with its category, and daily calories with the Mifflin-St Jeor formula, adjusted for activity level and goal (lose fat, maintain, build muscle).
+- **English and Dutch** with an animated toggle. The choice is remembered.
+- **Validation** on the server. When a form is rejected, the dashboard highlights the fields the API complained about.
+- **Example data** with one click, so you can try the dashboard right away.
+
+| Workouts | Profile (Dutch) |
+| --- | --- |
+| ![Workouts](docs/screenshots/workouts.png) | ![Profile in Dutch](docs/screenshots/profile-nl.png) |
+
+<p align="center"><img src="docs/screenshots/mobile.png" alt="FitHelper on a phone" width="300"></p>
+
+## Run it
+
+### With Docker
+
+```bash
+docker compose up --build
+```
+
+Open http://localhost:8000. The database is kept in a Docker volume.
+
+### With Python
+
+Requires Python 3.12 or newer.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements-dev.txt
+uvicorn app.main:app --reload
+```
+
+Open http://localhost:8000 and click **Load example data**, or run `python -m app.seed`.
+
+The interactive API documentation is at http://localhost:8000/docs.
+
+## API
+
+| Method | Path | What it does |
+| --- | --- | --- |
+| `GET` / `PUT` | `/api/profile` | Read or save the profile |
+| `GET` | `/api/workouts` | List workouts. Filters: `exercise`, `from`, `to`, `limit` |
+| `POST` | `/api/workouts` | Log a workout |
+| `PUT` / `DELETE` | `/api/workouts/{id}` | Change or delete a workout |
+| `GET` | `/api/workouts/exercises` | All exercise names used so far |
+| `GET` / `POST` | `/api/weights` | List weigh-ins or add one (one per day) |
+| `DELETE` | `/api/weights/{id}` | Delete a weigh-in |
+| `GET` | `/api/stats/summary` | Everything the overview page shows |
+| `GET` | `/api/stats/exercise/{name}` | Best estimated 1RM per day for one exercise |
+| `POST` | `/api/demo` | Replace all data with example data |
+
+Example:
+
+```bash
+curl -X POST http://localhost:8000/api/workouts \
+  -H "Content-Type: application/json" \
+  -d '{"date": "2026-10-13", "exercise": "Bench press", "sets": 4, "reps": 6, "weight_kg": 90}'
+```
+
+## Import data from the console app
+
+The first FitHelper saved its data in `data/user.json`, `data/workouts.json` and `data/weights.json`. Point the import script at that folder:
+
+```bash
+python -m app.import_v1 path/to/Fithelper-App/data
+```
+
+## Tests
+
+```bash
+pytest          # 19 tests: calculations and every API endpoint
+ruff check .    # lint
+```
+
+The tests use an in-memory SQLite database and a fixed date, so they give the same result every day. GitHub Actions runs the linter and the tests, then builds the Docker image and checks that the app answers.
+
+## Project structure
+
+```
+app/
+  main.py          FastAPI app, routes are registered here
+  fitness.py       BMI, calories, volume, 1RM, streaks (pure functions)
+  models.py        database tables (SQLModel)
+  schemas.py       request and response models
+  routers/         profile, workouts, weights, stats
+  seed.py          example data
+  import_v1.py     import from the console app
+static/            dashboard: HTML, CSS and JavaScript modules
+tests/             pytest
+```
+
+## Built with
+
+Python 3.13, FastAPI, SQLModel (SQLAlchemy + Pydantic), SQLite, pytest, Ruff, Docker, and vanilla JavaScript with hand-drawn SVG charts.
+
+## License
+
+[MIT](LICENSE)
