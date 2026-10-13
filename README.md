@@ -4,7 +4,13 @@ Track your workouts, body weight and progress, and learn new exercises from an a
 
 This is version 2 of [FitHelper](https://github.com/AhmetR42/Fithelper-App), which started as a Python console app. Data from the console app can be imported (see below).
 
-![Overview](docs/screenshots/overview.png)
+![Overview in the dark theme](docs/screenshots/overview.png)
+
+<details><summary>Light theme</summary>
+
+![Overview in the light theme](docs/screenshots/overview-light.png)
+
+</details>
 
 ## Features
 
@@ -14,6 +20,7 @@ This is version 2 of [FitHelper](https://github.com/AhmetR42/Fithelper-App), whi
 - **Weekly overview**: a weekly goal ring, workouts and volume this week, training streak in weeks, which muscle groups you trained, an exercise of the day and a bar chart of the last eight weeks.
 - **Rest timer** with presets, +15 seconds, a sound and vibration when the rest is over, and an option to start it after every set.
 - **Celebrations**: confetti for a new personal record or a reached weekly goal.
+- **Dark mode by default**, with an animated sun and moon switch in the top bar; the new theme grows as a circle from the switch.
 - **Settings**: light, dark or automatic theme, five accent colours, weekly goal, default rest time, sound and calm mode with fewer animations.
 - **Personal records** per exercise, and a progress chart for any exercise.
 - **Body weight**: one weigh-in per day, a line chart, and the change over the last 30 days.
@@ -26,7 +33,7 @@ This is version 2 of [FitHelper](https://github.com/AhmetR42/Fithelper-App), whi
 | --- | --- |
 | ![Exercise library](docs/screenshots/exercises.png) | ![Exercise details](docs/screenshots/exercise-detail.png) |
 
-| Workouts and rest timer | Profile and settings (Dutch, dark theme) |
+| Workouts and rest timer | Profile and settings (Dutch) |
 | --- | --- |
 | ![Workouts](docs/screenshots/workouts.png) | ![Profile in Dutch](docs/screenshots/profile-nl.png) |
 

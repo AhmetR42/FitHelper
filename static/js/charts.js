@@ -1,7 +1,7 @@
 // Small SVG charts drawn by hand: a bar chart and a line chart.
-// They scale with their container through the viewBox.
+// They are drawn at the width of their container, so text keeps the same size.
 
-const W = 600;
+let W = 600;
 const H = 240;
 const PAD = { top: 24, right: 16, bottom: 28, left: 44 };
 const NS = 'http://www.w3.org/2000/svg';
@@ -22,6 +22,7 @@ function niceMax(value) {
 }
 
 function frame(container, label) {
+    W = Math.max(320, Math.round(container.clientWidth) || 600);
     container.replaceChildren();
     const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': label });
     container.append(svg);

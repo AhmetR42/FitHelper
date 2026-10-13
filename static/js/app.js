@@ -3,9 +3,9 @@ import { confetti } from './confetti.js';
 import { drawDemo } from './demos.js';
 import { LOCALES, t } from './i18n.js';
 import {
-    findExercise, initLibrary, library, loadLibrary, miniFigure, refreshDialog, renderDaily, renderLibrary, tone,
+    findExercise, initLibrary, library, loadLibrary, miniFigure, MUSCLES, refreshDialog, renderDaily, renderLibrary, tone,
 } from './library.js';
-import { applySettings, calm, saveSettings, settings } from './settings.js';
+import { applySettings, calm, isDark, saveSettings, settings } from './settings.js';
 import { initTimer, refreshTimer, startTimer } from './timer.js';
 
 const LOCALE_KEY = 'fithelper:locale';
@@ -214,7 +214,7 @@ function renderOverview() {
 
     renderWeightChart($('#weight-chart'), summary.weight_history.slice(-30));
 
-    const records = summary.personal_records;
+    const records = summary.personal_records.slice(0, 5);
     $('#records').innerHTML = records.length
         ? records.map((r) => `<li>
             <div><strong>${escapeHtml(r.exercise)}</strong>
@@ -252,13 +252,15 @@ function renderGoal() {
 }
 
 function renderBalance() {
-    const muscles = Object.entries(state.summary.muscles_this_week);
-    if (!muscles.length) {
+    const trained = state.summary.muscles_this_week;
+    // Every muscle group is listed, so the ones you skipped this week stand out.
+    const muscles = [...Object.entries(trained), ...MUSCLES.filter((m) => !(m in trained)).map((m) => [m, 0])];
+    if (!Object.keys(trained).length) {
         $('#balance').innerHTML = `<p class="list-empty">${tr('balance.empty')}</p>`;
         return;
     }
-    const most = Math.max(...muscles.map(([, sets]) => sets));
-    $('#balance').innerHTML = `<ul class="balance">${muscles.map(([muscle, sets], i) => `<li style="--tone:${tone(muscle)}">
+    const most = Math.max(1, ...muscles.map(([, sets]) => sets));
+    $('#balance').innerHTML = `<ul class="balance">${muscles.map(([muscle, sets], i) => `<li class="${sets ? '' : 'is-zero'}" style="--tone:${tone(muscle)}">
         <span><span class="dot" aria-hidden="true"></span>${tr(`muscles.${muscle}`)}</span>
         <span class="balance-bar"><span style="width:${(sets / most) * 100}%;animation-delay:${i * 70}ms"></span></span>
         <small>${tr('balance.sets', { count: sets })}</small>
@@ -412,13 +414,25 @@ function showView() {
     });
     moveIndicator();
     if (name === 'overview' && state.summary) renderOverview();
+    if (name === 'weight' && state.summary) renderWeight();
 }
 
 window.addEventListener('hashchange', () => {
     showView();
     window.scrollTo({ top: 0 });
 });
-window.addEventListener('resize', moveIndicator);
+let resizeTimer;
+window.addEventListener('resize', () => {
+    moveIndicator();
+    // Charts are drawn at their container width, so draw them again after a resize.
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        if (!state.summary) return;
+        const view = location.hash.slice(1) || 'overview';
+        if (view === 'overview') renderOverview();
+        if (view === 'weight') renderWeight();
+    }, 250);
+});
 
 /* ---------- Language ---------- */
 
@@ -709,6 +723,24 @@ settingsForm.addEventListener('change', () => {
     if (state.summary) renderGoal();
 });
 settingsForm.addEventListener('submit', (event) => event.preventDefault());
+
+// Sun and moon switch in the top bar. The new theme grows as a circle from the switch.
+$('#theme-toggle').addEventListener('click', (event) => {
+    const theme = isDark() ? 'light' : 'dark';
+    const swap = () => {
+        saveSettings({ theme });
+        fillSettings();
+    };
+    if (!document.startViewTransition || calm()) {
+        swap();
+        return;
+    }
+    const box = event.currentTarget.getBoundingClientRect();
+    const root = document.documentElement;
+    root.style.setProperty('--reveal-x', `${box.left + box.width / 2}px`);
+    root.style.setProperty('--reveal-y', `${box.top + box.height / 2}px`);
+    document.startViewTransition(swap);
+});
 
 /* ---------- Start ---------- */
 

@@ -3,7 +3,7 @@
 const KEY = 'fithelper:settings';
 
 export const DEFAULTS = {
-    theme: 'auto',
+    theme: 'dark',
     accent: 'violet',
     weeklyGoal: 3,
     restSeconds: 90,
@@ -29,8 +29,11 @@ export function applySettings() {
     else root.dataset.theme = settings.theme;
     root.dataset.accent = settings.accent;
     root.dataset.motion = settings.motion;
-    const dark = settings.theme === 'dark' || (settings.theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-    document.querySelector('meta[name=theme-color]')?.setAttribute('content', dark ? '#161925' : '#f4f5fa');
+    const dark = isDark();
+    document.querySelector('meta[name=theme-color]')?.setAttribute('content', dark ? '#1b1e28' : '#e6e8ee');
+    const toggle = document.getElementById('theme-toggle');
+    toggle?.setAttribute('aria-checked', String(dark));
+    toggle?.classList.toggle('is-dark', dark);
 }
 
 export function saveSettings(patch) {
@@ -42,5 +45,8 @@ export function saveSettings(patch) {
     }
     applySettings();
 }
+
+export const isDark = () => settings.theme === 'dark'
+    || (settings.theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
 
 export const calm = () => settings.motion === 'reduced' || matchMedia('(prefers-reduced-motion: reduce)').matches;

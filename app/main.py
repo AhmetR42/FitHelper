@@ -47,9 +47,17 @@ def load_demo_data(session: SessionDep):
     return {"status": "demo data loaded"}
 
 
-app.mount("/static", StaticFiles(directory=STATIC), name="static")
+class StaticFilesNoCache(StaticFiles):
+    # Browsers must check for a newer file, so an update never mixes old CSS with new HTML.
+    def file_response(self, *args, **kwargs):
+        response = super().file_response(*args, **kwargs)
+        response.headers["Cache-Control"] = "no-cache"
+        return response
+
+
+app.mount("/static", StaticFilesNoCache(directory=STATIC), name="static")
 
 
 @app.get("/", include_in_schema=False)
 def index():
-    return FileResponse(STATIC / "index.html")
+    return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-cache"})

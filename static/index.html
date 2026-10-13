@@ -48,10 +48,19 @@
             <span class="tab-indicator" aria-hidden="true"></span>
         </nav>
 
-        <div class="lang" role="group" data-i18n-label="language" aria-label="Language">
-            <span class="lang-thumb" aria-hidden="true"></span>
-            <button type="button" data-locale="en">EN</button>
-            <button type="button" data-locale="nl">NL</button>
+        <div class="top-actions">
+            <button type="button" class="theme-toggle" id="theme-toggle" role="switch" aria-checked="false" data-i18n-label="settings.darkMode" aria-label="Dark mode">
+                <span class="theme-stars" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="theme-thumb" aria-hidden="true">
+                    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+                    <svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+                </span>
+            </button>
+            <div class="lang" role="group" data-i18n-label="language" aria-label="Language">
+                <span class="lang-thumb" aria-hidden="true"></span>
+                <button type="button" data-locale="en">EN</button>
+                <button type="button" data-locale="nl">NL</button>
+            </div>
         </div>
     </header>
 
@@ -81,17 +90,7 @@
             <div class="tiles" id="tiles"></div>
 
             <div class="grid-3">
-                <article class="panel daily" id="daily"></article>
                 <article class="panel span-2">
-                    <header class="panel-head">
-                        <h2 data-i18n="balance.title">Muscles this week</h2>
-                    </header>
-                    <div id="balance"></div>
-                </article>
-            </div>
-
-            <div class="grid-2">
-                <article class="panel">
                     <header class="panel-head">
                         <h2 data-i18n="charts.volume">Weekly volume</h2>
                         <span class="unit">kg</span>
@@ -100,11 +99,21 @@
                 </article>
                 <article class="panel">
                     <header class="panel-head">
+                        <h2 data-i18n="balance.title">Muscles this week</h2>
+                    </header>
+                    <div id="balance"></div>
+                </article>
+            </div>
+
+            <div class="grid-3">
+                <article class="panel span-2">
+                    <header class="panel-head">
                         <h2 data-i18n="charts.weight">Body weight</h2>
                         <span class="unit">kg</span>
                     </header>
                     <div class="chart" id="weight-chart"></div>
                 </article>
+                <article class="panel daily" id="daily"></article>
             </div>
 
             <div class="grid-2">
