@@ -51,6 +51,12 @@ Open http://localhost:8000. The database is kept in a Docker volume.
 
 Is port 8000 already in use? Pick another one, for example `PORT=8080 docker compose up --build` (PowerShell: `$env:PORT=8080; docker compose up --build`), and open http://localhost:8080.
 
+### Online (free)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/AhmetR42/FitHelper)
+
+The repository contains a `render.yaml`, so Render builds the Docker image and gives the app a public address. On the free plan the app sleeps after a while without visitors (the first visit then takes about a minute) and the database starts empty after every restart.
+
 ### With Python
 
 Requires Python 3.12 or newer.

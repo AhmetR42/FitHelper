@@ -1,0 +1,10 @@
+# One-click hosting on Render (free plan). The free plan sleeps when nobody
+# visits and does not keep the SQLite file, so "Load example data" is the way
+# to show the dashboard.
+services:
+  - type: web
+    name: fithelper
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    autoDeploy: true
