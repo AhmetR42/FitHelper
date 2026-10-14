@@ -4,6 +4,8 @@ Track your workouts, body weight and progress, and learn new exercises from an a
 
 This is version 2 of [FitHelper](https://github.com/AhmetR42/Fithelper-App), which started as a Python console app. Data from the console app can be imported (see below).
 
+**Live demo:** [fithelper-3n3w.onrender.com](https://fithelper-3n3w.onrender.com/) (free hosting, so the first visit can take about a minute to wake up; press "Load example data" to try it right away)
+
 ![Overview in the dark theme](docs/screenshots/overview.png)
 
 <details><summary>Light theme</summary>
